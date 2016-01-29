@@ -131,6 +131,7 @@ typedef NSUInteger CDVContactError;
 #define kW3ContactTitle @"title"
 #define kW3ContactDepartment @"department"
 #define kW3ContactBirthday @"birthday"
+#define kW3ContactModificationDate @"modificationDate"
 #define kW3ContactNote @"note"
 #define kW3ContactPhotos @"photos"
 #define kW3ContactCategories @"categories"

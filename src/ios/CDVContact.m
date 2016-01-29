@@ -104,6 +104,7 @@ static NSDictionary* org_apache_cordova_contacts_defaultFields = nil;
             kW3ContactTitle, [NSNumber numberWithInt:kABPersonJobTitleProperty],
             kW3ContactDepartment, [NSNumber numberWithInt:kABPersonDepartmentProperty],
             kW3ContactBirthday, [NSNumber numberWithInt:kABPersonBirthdayProperty],
+            kW3ContactModificationDate, [NSNumber numberWithInt:kABPersonModificationDateProperty],
             kW3ContactUrls, [NSNumber numberWithInt:kABPersonURLProperty],
             kW3ContactNote, [NSNumber numberWithInt:kABPersonNoteProperty],
             nil];
@@ -135,6 +136,7 @@ static NSDictionary* org_apache_cordova_contacts_defaultFields = nil;
             [NSNumber numberWithInt:kABPersonJobTitleProperty], kW3ContactTitle,
             [NSNumber numberWithInt:kABPersonDepartmentProperty], kW3ContactDepartment,
             [NSNumber numberWithInt:kABPersonBirthdayProperty], kW3ContactBirthday,
+            [NSNumber numberWithInt:kABPersonModificationDateProperty], kW3ContactModificationDate,
             [NSNumber numberWithInt:kABPersonNoteProperty], kW3ContactNote,
             [NSNumber numberWithInt:kABPersonURLProperty], kW3ContactUrls,
             kABPersonInstantMessageUsernameKey, kW3ContactImValue,
@@ -196,6 +198,7 @@ static NSDictionary* org_apache_cordova_contacts_defaultFields = nil;
             [[CDVContact defaultObjectAndProperties] objectForKey:kW3ContactPhotos], kW3ContactPhotos,
             [[CDVContact defaultObjectAndProperties] objectForKey:kW3ContactUrls], kW3ContactUrls,
             [NSNull null], kW3ContactBirthday,
+            [NSNull null], kW3ContactModificationDate,
             [NSNull null], kW3ContactNote,
             nil];
     }
@@ -315,6 +318,17 @@ static NSDictionary* org_apache_cordova_contacts_defaultFields = nil;
     }
     if ((aDate != nil) || [ms isKindOfClass:[NSString class]]) {
         [self setValue:aDate != nil ? aDate:ms forProperty:kABPersonBirthdayProperty inRecord:person asUpdate:bUpdate];
+    }
+    
+    id ms = [aContact valueForKey:kW3ContactModificationDate];
+    NSDate* aDate = nil;
+    if (ms && [ms isKindOfClass:[NSNumber class]]) {
+        double msValue = [ms doubleValue];
+        msValue = msValue / 1000;
+        aDate = [NSDate dateWithTimeIntervalSince1970:msValue];
+    }
+    if ((aDate != nil) || [ms isKindOfClass:[NSString class]]) {
+        [self setValue:aDate != nil ? aDate:ms forProperty:kABPersonModificationDateProperty inRecord:person asUpdate:bUpdate];
     }
     // don't update creation date
     // modification date will get updated when save
@@ -953,7 +967,7 @@ static NSDictionary* org_apache_cordova_contacts_defaultFields = nil;
     // NSLog(@"getting dates");
     NSNumber* ms;
 
-    /** Contact Revision field removed from June 16, 2011 version of specification
+    /** Contact Revision field removed from June 16, 2011 version of specification */
 
     if ([self.returnFields valueForKey:kW3ContactUpdated]){
         ms = [self getDateAsNumber: kABPersonModificationDateProperty];
@@ -966,7 +980,6 @@ static NSDictionary* org_apache_cordova_contacts_defaultFields = nil;
         }
 
     }
-    */
 
     if ([self.returnFields valueForKey:kW3ContactBirthday]) {
         ms = [self getDateAsNumber:kABPersonBirthdayProperty];
@@ -1545,6 +1558,9 @@ static NSDictionary* org_apache_cordova_contacts_defaultFields = nil;
     // searching for photos is not supported
     if (!bFound && [searchFields valueForKey:kW3ContactBirthday]) {
         bFound = [self testDateValue:testValue forW3CProperty:kW3ContactBirthday];
+    }
+    if (!bFound && [searchFields valueForKey:kW3ContactModificationDate]) {
+        bFound = [self testDateValue:testValue forW3CProperty:kW3ContactModificationDate];
     }
     if (!bFound && [self valueForKeyIsArray:searchFields key:kW3ContactUrls]) {
         bFound = [self searchContactFields:(NSArray*)[searchFields valueForKey:kW3ContactUrls]
