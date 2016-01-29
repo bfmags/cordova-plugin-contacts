@@ -1,4 +1,4 @@
-/*
+cordova.define("cordova-plugin-contacts.ContactFieldType", function(require, exports, module) { /*
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,6 +25,7 @@
     var fieldType = {
         addresses:      "addresses",
         birthday:       "birthday",
+        modificationDate: "modificationDate",
         categories:     "categories",
         country:        "country",
         department:     "department",
@@ -53,3 +54,5 @@
     };
 
     module.exports = fieldType;
+
+});

@@ -1,4 +1,4 @@
-/*
+cordova.define("cordova-plugin-contacts.Contact", function(require, exports, module) { /*
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -59,6 +59,23 @@ function convertOut(contact) {
         }
         contact.birthday = value;
     }
+               
+    value = contact.modificationDate;
+    if (value !== null) {
+        // try to make it a Date object if it is not already
+        if (!utils.isDate(value)){
+            try {
+                value = new Date(value);
+            } catch(exception){
+                value = null;
+            }
+        }
+        if (utils.isDate(value)){
+            value = value.valueOf(); // convert to milliseconds
+        }
+        contact.modificationDate = value;
+    }
+               
     return contact;
 }
 
@@ -75,13 +92,14 @@ function convertOut(contact) {
 * @param {Array.<ContactField>} ims instant messaging user ids
 * @param {Array.<ContactOrganization>} organizations
 * @param {DOMString} birthday contact's birthday
+ * @param {DOMString} modificationDate contact's modification date
 * @param {DOMString} note user notes about contact
 * @param {Array.<ContactField>} photos
 * @param {Array.<ContactField>} categories
 * @param {Array.<ContactField>} urls contact's web sites
 */
 var Contact = function (id, displayName, name, nickname, phoneNumbers, emails, addresses,
-    ims, organizations, birthday, note, photos, categories, urls) {
+    ims, organizations, birthday, modificationDate, note, photos, categories, urls) {
     this.id = id || null;
     this.rawId = null;
     this.displayName = displayName || null;
@@ -93,6 +111,7 @@ var Contact = function (id, displayName, name, nickname, phoneNumbers, emails, a
     this.ims = ims || null; // ContactField[]
     this.organizations = organizations || null; // ContactOrganization[]
     this.birthday = birthday || null;
+    this.modificationDate = modificationDate || null;
     this.note = note || null;
     this.photos = photos || null; // ContactField[]
     this.categories = categories || null; // ContactField[]
@@ -175,3 +194,5 @@ Contact.prototype.save = function(successCB, errorCB) {
 
 
 module.exports = Contact;
+
+});
