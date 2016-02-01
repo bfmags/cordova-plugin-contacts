@@ -1,3 +1,5 @@
+This fork of the cordova-plugin-contacts will contain the modification-date attribute that is not part of the W3C Contacts API Spec
+
 <!---
 # license: Licensed to the Apache Software Foundation (ASF) under one
 #         or more contributor license agreements.  See the NOTICE file
